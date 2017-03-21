@@ -7,6 +7,7 @@ using SQLite;
 using Android.Views;
 using Android.Content;
 using Android.Util;
+using System.IO;
 
 namespace Timetable_Tape
 {
@@ -31,9 +32,12 @@ namespace Timetable_Tape
             // SetContentView (Resource.Layout.Main);
             Schedule schedule = new Schedule();
 
-            //string dbName = "Database.db3";
-            //SQLiteConnection connection = new SQLiteConnection(dbName);
-            //ScheduleManager sm = new ScheduleManager(connection);
+            
+            var databaseFileName = "InteractiveTimetableDatabase.db3";
+            var dbPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), databaseFileName);
+
+            SQLiteConnection connection = new SQLiteConnection(dbPath);
+            ScheduleManager sm = new ScheduleManager(connection);
 
         }
 
