@@ -2,4 +2,6 @@
 <resources>
     <string name="Hello">Hello World, Click Me!</string>
     <string name="ApplicationName">Timetable Tape</string>
+    <string name="TagValue1">test</string>
+    <string name="TagValue2">test</string>
 </resources>

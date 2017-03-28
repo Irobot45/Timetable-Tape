@@ -41,11 +41,33 @@ namespace Timetable_Tape
 			}
 		}
 		
+		public partial class Color
+		{
+			
+			// aapt resource value: 0x7f050000
+			public const int theme_background = 2131034112;
+			
+			static Color()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Color()
+			{
+			}
+		}
+		
 		public partial class Drawable
 		{
 			
 			// aapt resource value: 0x7f020000
-			public const int Icon = 2130837504;
+			public const int emptyButton = 2130837504;
+			
+			// aapt resource value: 0x7f020001
+			public const int Icon = 2130837505;
+			
+			// aapt resource value: 0x7f020002
+			public const int plusSign = 2130837506;
 			
 			static Drawable()
 			{
@@ -60,29 +82,32 @@ namespace Timetable_Tape
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f050004
-			public const int Activities_Scrollview = 2131034116;
+			// aapt resource value: 0x7f070005
+			public const int Activities_Scrollview = 2131165189;
 			
-			// aapt resource value: 0x7f050001
-			public const int Date_Time_Textview = 2131034113;
+			// aapt resource value: 0x7f070004
+			public const int Add_TimetableTape_ImageButton = 2131165188;
 			
-			// aapt resource value: 0x7f050007
-			public const int FragmentContainer = 2131034119;
+			// aapt resource value: 0x7f070001
+			public const int Date_Time_Textview = 2131165185;
 			
-			// aapt resource value: 0x7f050006
-			public const int Motivation_Goals_Scrollview = 2131034118;
+			// aapt resource value: 0x7f070008
+			public const int FragmentContainer = 2131165192;
 			
-			// aapt resource value: 0x7f050002
-			public const int Timetable_Tape_Scrollview = 2131034114;
+			// aapt resource value: 0x7f070007
+			public const int Motivation_Goals_Scrollview = 2131165191;
 			
-			// aapt resource value: 0x7f050000
-			public const int Title_Textview = 2131034112;
+			// aapt resource value: 0x7f070002
+			public const int Timetable_Tape_Scrollview = 2131165186;
 			
-			// aapt resource value: 0x7f050003
-			public const int imageButton1 = 2131034115;
+			// aapt resource value: 0x7f070003
+			public const int Timetable_Tape_Scrollview_GridLayout = 2131165187;
 			
-			// aapt resource value: 0x7f050005
-			public const int imageButton2 = 2131034117;
+			// aapt resource value: 0x7f070000
+			public const int Title_Textview = 2131165184;
+			
+			// aapt resource value: 0x7f070006
+			public const int imageButton2 = 2131165190;
 			
 			static Id()
 			{
@@ -122,12 +147,34 @@ namespace Timetable_Tape
 			// aapt resource value: 0x7f040000
 			public const int Hello = 2130968576;
 			
+			// aapt resource value: 0x7f040002
+			public const int TagValue1 = 2130968578;
+			
+			// aapt resource value: 0x7f040003
+			public const int TagValue2 = 2130968579;
+			
 			static String()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
 			}
 			
 			private String()
+			{
+			}
+		}
+		
+		public partial class Style
+		{
+			
+			// aapt resource value: 0x7f060000
+			public const int Theme_Custom = 2131099648;
+			
+			static Style()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Style()
 			{
 			}
 		}

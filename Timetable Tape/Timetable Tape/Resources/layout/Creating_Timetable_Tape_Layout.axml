@@ -2,88 +2,97 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-  <!-- Title content view -->
-  <LinearLayout
-      android:orientation="horizontal"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:minWidth="25px"
-      android:minHeight="25px">
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:gridSpec="1|8|#0093eeff|K:#ee8700ff:16,l:72,l:16,r|S:#83ee00ff:16,0,l:16,56,l:16,0,r">
+<!-- Title content view -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:minWidth="25px"
+        android:minHeight="25px">
     <!-- Title textview -->
-    <TextView
-        android:text="Test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/Title_Textview"
-        android:layout_weight="3" />
+        <TextView
+            android:text="Test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Title_Textview"
+            android:layout_weight="3" />
     <!-- Date and Time textview-->
-    <TextView
-        android:text="Date and time"
-        android:layout_width="wrap_content"
+        <TextView
+            android:text="Date and time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Date_Time_Textview"
+            android:layout_weight="1" />
+    </LinearLayout>
+<!-- The timetable tape content view -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/Date_Time_Textview"
-        android:layout_weight="1" />
-  </LinearLayout>
-  <!-- The timetable tape content view -->
-  <LinearLayout
-      android:orientation="vertical"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_weight="3"
-      android:minWidth="25px"
-      android:minHeight="25px">
+        android:layout_weight="3"
+        android:minWidth="25px"
+        android:minHeight="25px">
     <!-- Timetable tape scrollview-->
-    <HorizontalScrollView
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/Timetable_Tape_Scrollview">
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/Timetable_Tape_Scrollview_GridLayout"
+                android:rowCount="1">
+                <ImageButton
+                    android:src="@drawable/plussign"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:id="@+id/Add_TimetableTape_ImageButton" />
+            </GridLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+<!-- Collection of all activities content view -->
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/Timetable_Tape_Scrollview">
-      <ImageButton
-          android:src="@android:drawable/ic_menu_gallery"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:id="@+id/imageButton1" />
-    </HorizontalScrollView>
-  </LinearLayout>
-  <!-- Collection of all activities content view -->
-  <LinearLayout
-      android:orientation="vertical"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_weight="13"
-      android:minWidth="25px"
-      android:minHeight="25px">
+        android:layout_height="wrap_content"
+        android:layout_weight="13"
+        android:minWidth="25px"
+        android:minHeight="25px">
     <!-- activities scrollview -->
-    <HorizontalScrollView
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/Activities_Scrollview">
+            <ImageButton
+                android:src="@android:drawable/ic_menu_gallery"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/imageButton2" />
+        </HorizontalScrollView>
+    </LinearLayout>
+<!-- Collection of all notivation goals content view -->
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/Activities_Scrollview">
-      <ImageButton
-          android:src="@android:drawable/ic_menu_gallery"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:id="@+id/imageButton2" />
-    </HorizontalScrollView>
-  </LinearLayout>
-  <!-- Collection of all notivation goals content view -->
-  <LinearLayout
-      android:orientation="vertical"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_weight="4"
-      android:minWidth="25px"
-      android:minHeight="25px">
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:minWidth="25px"
+        android:minHeight="25px">
     <!-- Motivation goals scrollview -->
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/Motivation_Goals_Scrollview">
-      <ImageButton
-          android:src="@android:drawable/ic_menu_gallery"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:id="@+id/imageButton2" />
-    </HorizontalScrollView>
-  </LinearLayout>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/Motivation_Goals_Scrollview">
+            <ImageButton
+                android:src="@android:drawable/ic_menu_gallery"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/imageButton2" />
+        </HorizontalScrollView>
+    </LinearLayout>
 </LinearLayout>
