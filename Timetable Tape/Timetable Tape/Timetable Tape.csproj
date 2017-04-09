@@ -44,7 +44,8 @@
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="InteractiveTimetable">
+    <Reference Include="InteractiveTimetable, Version=1.0.6303.25809, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Timetable\InteractiveTimetable\InteractiveTimetable\bin\Debug\InteractiveTimetable.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -96,6 +97,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\BitmapHelper.cs" />
     <Compile Include="Classes\JavaObject.cs" />
     <Compile Include="Fragments\Fragment_Creating_Timetable_Tape.cs" />
     <Compile Include="MainActivity.cs" />
@@ -108,6 +110,9 @@
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <AndroidResource Include="Resources\layout\Creating_Timetable_Tape_Layout.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\ImageButton_Card.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

@@ -82,32 +82,53 @@ namespace Timetable_Tape
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f070005
-			public const int Activities_Scrollview = 2131165189;
-			
-			// aapt resource value: 0x7f070004
-			public const int Add_TimetableTape_ImageButton = 2131165188;
-			
-			// aapt resource value: 0x7f070001
-			public const int Date_Time_Textview = 2131165185;
+			// aapt resource value: 0x7f07000a
+			public const int Activities_GridLayout = 2131165194;
 			
 			// aapt resource value: 0x7f070008
-			public const int FragmentContainer = 2131165192;
+			public const int Activities_LinearLayout = 2131165192;
+			
+			// aapt resource value: 0x7f070009
+			public const int Activities_Scrollview = 2131165193;
 			
 			// aapt resource value: 0x7f070007
-			public const int Motivation_Goals_Scrollview = 2131165191;
+			public const int Add_ScheduleItem_ImageButton = 2131165191;
 			
 			// aapt resource value: 0x7f070002
-			public const int Timetable_Tape_Scrollview = 2131165186;
+			public const int Date_Textview = 2131165186;
 			
 			// aapt resource value: 0x7f070003
-			public const int Timetable_Tape_Scrollview_GridLayout = 2131165187;
+			public const int DigitalClock = 2131165187;
 			
-			// aapt resource value: 0x7f070000
-			public const int Title_Textview = 2131165184;
+			// aapt resource value: 0x7f07000f
+			public const int FragmentContainer = 2131165199;
+			
+			// aapt resource value: 0x7f07000d
+			public const int Motivation_Goals_GridLayout = 2131165197;
+			
+			// aapt resource value: 0x7f07000b
+			public const int Motivation_Goals_LinearLayout = 2131165195;
+			
+			// aapt resource value: 0x7f07000c
+			public const int Motivation_Goals_Scrollview = 2131165196;
 			
 			// aapt resource value: 0x7f070006
-			public const int imageButton2 = 2131165190;
+			public const int Schedule_GridLayout = 2131165190;
+			
+			// aapt resource value: 0x7f070004
+			public const int Schedule_LinearLayout = 2131165188;
+			
+			// aapt resource value: 0x7f070005
+			public const int Schedule_Scrollview = 2131165189;
+			
+			// aapt resource value: 0x7f070000
+			public const int Title_LinearLayout = 2131165184;
+			
+			// aapt resource value: 0x7f070001
+			public const int Title_Textview = 2131165185;
+			
+			// aapt resource value: 0x7f07000e
+			public const int imageButton_Card = 2131165198;
 			
 			static Id()
 			{
@@ -126,7 +147,10 @@ namespace Timetable_Tape
 			public const int Creating_Timetable_Tape_Layout = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int Main = 2130903041;
+			public const int ImageButton_Card = 2130903041;
+			
+			// aapt resource value: 0x7f030002
+			public const int Main = 2130903042;
 			
 			static Layout()
 			{
@@ -141,17 +165,35 @@ namespace Timetable_Tape
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f040001
-			public const int ApplicationName = 2130968577;
-			
-			// aapt resource value: 0x7f040000
-			public const int Hello = 2130968576;
-			
 			// aapt resource value: 0x7f040002
-			public const int TagValue1 = 2130968578;
+			public const int ApplicationName = 2130968578;
+			
+			// aapt resource value: 0x7f040001
+			public const int Hello = 2130968577;
 			
 			// aapt resource value: 0x7f040003
-			public const int TagValue2 = 2130968579;
+			public const int TagValue1 = 2130968579;
+			
+			// aapt resource value: 0x7f040004
+			public const int TagValue2 = 2130968580;
+			
+			// aapt resource value: 0x7f040007
+			public const int add_photo = 2130968583;
+			
+			// aapt resource value: 0x7f040000
+			public const int app_name = 2130968576;
+			
+			// aapt resource value: 0x7f040009
+			public const int cancel_button = 2130968585;
+			
+			// aapt resource value: 0x7f040006
+			public const int choose_from_gallery = 2130968582;
+			
+			// aapt resource value: 0x7f040008
+			public const int choose_photo = 2130968584;
+			
+			// aapt resource value: 0x7f040005
+			public const int take_a_photo = 2130968581;
 			
 			static String()
 			{

@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Timetable Tape</string>
     <string name="Hello">Hello World, Click Me!</string>
     <string name="ApplicationName">Timetable Tape</string>
     <string name="TagValue1">test</string>
     <string name="TagValue2">test</string>
+    <string name="take_a_photo">Take Picture</string>
+    <string name="choose_from_gallery">Choose from gallery</string>
+    <string name="add_photo">Add picture</string>
+    <string name="choose_photo">Choose picture</string>
+    <string name="cancel_button">Cancel</string>
+  
 </resources>

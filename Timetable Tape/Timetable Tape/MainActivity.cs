@@ -10,6 +10,10 @@ using Android.Util;
 using System.IO;
 using System;
 using Android.Runtime;
+using Android.Provider;
+using Android.Database;
+using System.Collections.Generic;
+using Android.Content.PM;
 
 namespace Timetable_Tape
 {
@@ -19,6 +23,10 @@ namespace Timetable_Tape
         public static MainActivity Current { get; private set; }
         public ScheduleManager scheduleManager { get; set; }
         public string projectPath { get; set; }
+        public bool HasCamera { get; private set; }
+
+        public Java.IO.File PhotoDirectory;
+
 
         public MainActivity()
         {
@@ -49,18 +57,58 @@ namespace Timetable_Tape
             Schedule schedule = new Schedule();
 
             
+
             // Creating Database and connection
             var databaseFileName = "InteractiveTimetableDatabase.db3";
             projectPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
             var dbPath = Path.Combine(projectPath, databaseFileName);
             SQLiteConnection connection = new SQLiteConnection(dbPath);
 
+
+
+            connection.DropTable<ScheduleItem>();
             // Creating scheduleManager
             scheduleManager = new ScheduleManager(connection);
 
         }
 
-        
+        public string GetPathToImage(Activity activity, Android.Net.Uri uri)
+        {
+            string path = null;
+            string[] proj = { MediaStore.Video.Media.InterfaceConsts.Data };
+            ICursor mycursor = activity.ContentResolver.Query(uri, proj, null, null, null);
+            if (mycursor.MoveToFirst())
+            {
+                var columnIndex = mycursor.GetColumnIndexOrThrow(MediaStore.Video.Media.InterfaceConsts.Data);
+                path = mycursor.GetString(columnIndex);
+            }
+            mycursor.Close();
+            return path;
+        }
+
+
+        private void CreateDirectoryForPictures()
+        {
+            PhotoDirectory
+                = new Java.IO.File(Android.OS.Environment.GetExternalStoragePublicDirectory(
+                    Android.OS.Environment.DirectoryPictures),
+                    GetString(Resource.String.app_name));
+
+            if (!PhotoDirectory.Exists())
+            {
+                PhotoDirectory.Mkdirs();
+            }
+        }
+
+        private bool IsThereAnAppToTakePictures()
+        {
+            Intent intent = new Intent(MediaStore.ActionImageCapture);
+            IList<ResolveInfo> availableActivities =
+                PackageManager.QueryIntentActivities(intent, PackageInfoFlags.MatchDefaultOnly);
+            return availableActivities != null && availableActivities.Count > 0;
+        }
+
+
     }
 }
 
