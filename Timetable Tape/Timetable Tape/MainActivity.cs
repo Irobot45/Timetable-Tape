@@ -24,6 +24,7 @@ namespace Timetable_Tape
         public ScheduleManager scheduleManager { get; set; }
         public string projectPath { get; set; }
         public bool HasCamera { get; private set; }
+        public SQLiteConnection connection { get; set; }
 
         public Java.IO.File PhotoDirectory;
 
@@ -51,7 +52,7 @@ namespace Timetable_Tape
             trans.Commit();
 
 
-
+            
 
             // Set our view from the "main" layout resource
             Schedule schedule = new Schedule();
@@ -62,11 +63,10 @@ namespace Timetable_Tape
             var databaseFileName = "InteractiveTimetableDatabase.db3";
             projectPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
             var dbPath = Path.Combine(projectPath, databaseFileName);
-            SQLiteConnection connection = new SQLiteConnection(dbPath);
+            connection = new SQLiteConnection(dbPath);
 
+            HasCamera = IsThereAnAppToTakePictures();
 
-
-            connection.DropTable<ScheduleItem>();
             // Creating scheduleManager
             scheduleManager = new ScheduleManager(connection);
 

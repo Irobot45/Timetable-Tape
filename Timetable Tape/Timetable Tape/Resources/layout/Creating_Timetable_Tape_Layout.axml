@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:gridSpec="1|8|#0093eeff|K:#ee8700ff:16,l:72,l:16,r|S:#83ee00ff:16,0,l:16,56,l:16,0,r">
+    tools:gridSpec="1|8|#0093eeff|K:#ee8700ff:16,l:72,l:16,r|S:#83ee00ff:16,0,l:16,56,l:16,0,r"
+    android:id="@+id/Main_LinearLayout">
 <!-- Title content view -->
     <LinearLayout
         android:orientation="horizontal"
@@ -64,12 +65,12 @@
                 android:layout_weight="10"
                 android:id="@+id/Schedule_Scrollview"
                 android:scrollbars="horizontal">
-                <GridLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="10"
-                    android:id="@+id/Schedule_GridLayout"
-                    android:rowCount="1" />
+              <GridLayout
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="10"
+                  android:id="@+id/Schedule_GridLayout"
+                  android:rowCount="1" />
             </HorizontalScrollView>
             <ImageButton
                 android:src="@drawable/plussign"
@@ -78,7 +79,9 @@
                 android:layout_height="200dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:id="@+id/Add_ScheduleItem_ImageButton" />
+                android:id="@+id/Add_ScheduleItem_ImageButton"
+                android:scaleType="fitXY"
+                android:padding="20dp"/>
         </RelativeLayout>
     </LinearLayout>
 <!-- Collection of all activities content view -->
@@ -89,7 +92,8 @@
         android:layout_weight="13"
         android:minWidth="25px"
         android:minHeight="25px"
-        android:id="@+id/Activities_LinearLayout">
+        android:id="@+id/Activities_LinearLayout"
+        android:layout_marginTop="60dp">
     <!-- activities scrollview -->
         <ScrollView
             android:layout_width="match_parent"
@@ -116,7 +120,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/Motivation_Goals_Scrollview">
-          <GridLayout
+            <GridLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/Motivation_Goals_GridLayout"
