@@ -106,7 +106,6 @@
   <ItemGroup>
     <Compile Include="Classes\BitmapHelper.cs" />
     <Compile Include="Classes\JavaObject.cs" />
-    <Compile Include="Classes\MyShadowBuilder.cs" />
     <Compile Include="Fragments\Fragment_Creating_Timetable_Tape.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

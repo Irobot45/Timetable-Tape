@@ -19,6 +19,7 @@ using Android.Provider;
 using Java.IO;
 using Android.Content.Res;
 using Android.Graphics;
+using System.Timers;
 
 namespace Timetable_Tape
 {
@@ -30,15 +31,16 @@ namespace Timetable_Tape
         static int newActivityId = 0;
         static int activityId { get { newActivityId++; return newActivityId; } set { newActivityId = value; } }
         static int newMotivationGoalId = 0;
-        static int motivationGoalId { get { newMotivationGoalId++; return newMotivationGoalId; } }
+        static int motivationGoalId { get { newMotivationGoalId++; return newMotivationGoalId; } set { newMotivationGoalId = value; } }
 
         private static int newCard_TypeId = 0;
 
         private static readonly int RequestCamera = 0;
         private static readonly int SelectFile = 1;
 
-        ImageButton focusedImageButton  = null;
+        ImageButton focusedImageButton = null;
         ImageButton scheduledMotivationGoalImageButton = null;
+        ImageButton draggingImageButton = null;
 
 
 
@@ -60,6 +62,7 @@ namespace Timetable_Tape
         private Bitmap _bitmap;
         private Android.Net.Uri _currentUri;
 
+        private long timerStart;
 
         private bool _fromGallery;
 
@@ -68,7 +71,7 @@ namespace Timetable_Tape
         View view;
 
         #endregion
-        
+
         #region Event Handlers
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -94,7 +97,7 @@ namespace Timetable_Tape
             _activities_GridLayout = view.FindViewById<GridLayout>(Resource.Id.Activities_GridLayout);
             _motivation_Goals_GridLayout = view.FindViewById<GridLayout>(Resource.Id.Motivation_Goals_GridLayout);
             _date_Textview = view.FindViewById<TextView>(Resource.Id.Date_Textview);
-            
+
 
             //setting tags
             _addEmptyScheduleItemimageButton.SetTag(Resource.String.TagValue2, new JavaObject<Card>(new Card()));
@@ -116,7 +119,38 @@ namespace Timetable_Tape
             return view;
         }
 
-        
+        void AnyCardTouched(object sender, View.TouchEventArgs e)
+        {
+            if (e.Event.Action == MotionEventActions.Move)
+            {
+                // Generate clip data package to attach it to the drag
+                var data = ClipData.NewPlainText("name", "Element 1");
+
+                draggingImageButton = sender as ImageButton;
+                ChangeFocus(draggingImageButton);
+
+                // Start dragging and pass data
+                ((sender) as ImageButton).StartDrag(data, new View.DragShadowBuilder(((sender) as ImageButton)), null, 0);
+            }
+
+            if (e.Event.Action == MotionEventActions.Down)
+            {
+                timerStart = Java.Lang.JavaSystem.CurrentTimeMillis();
+                
+            }
+            if(e.Event.Action == MotionEventActions.Up)
+            {
+                if (Java.Lang.JavaSystem.CurrentTimeMillis() - timerStart < 3500)
+                {
+                    (sender as ImageButton).PerformClick();
+                }
+                else
+                {
+                    (sender as ImageButton).PerformLongClick();
+                }
+            }
+        }
+
 
         public override void OnDestroy()
         {
@@ -135,12 +169,16 @@ namespace Timetable_Tape
 
             //adding an empty card
             ScheduleItem scheduleitem = new ScheduleItem();
-            
+
             scheduleitem.OrderNumber = scheduledItems.Count;
 
             scheduledItems.Add(scheduleitem);
 
-            AddNewImageButtonToGridlayout("ScheduledItem_Imagebutton" + scheduledItemId, getUriFromResourceId(Resource.Drawable.emptyButton), _schedule_GridLayout, AnyCardClicked);
+            AddNewImageButtonToGridlayout("ScheduledItem_Imagebutton" + scheduledItemId, getUriFromResourceId(Resource.Drawable.emptyButton), _schedule_GridLayout, AnyCardClicked, AnyCardTouched, AnyCardDragged);
+            if (scheduledMotivationGoalImageButton != null)
+            {
+                LoadScheduledItems();
+            }
         }
 
         private void AddActivityOrMotivationGoalButtonClicked(object sender, EventArgs eventArgs)
@@ -165,61 +203,84 @@ namespace Timetable_Tape
             }
         }
 
-        void HandleDrag(object sender, Android.Views.View.DragEventArgs e)
+
+
+        void AnyCardDragged(object sender, Android.Views.View.DragEventArgs e)
         {
             var evt = e.Event;
             switch (evt.Action)
             {
                 case DragAction.Started:
-                    /* To register your view as a potential drop zone for the current view being dragged
-                     * you need to set the event as handled
-                     */
                     e.Handled = true;
-
-                    /* An important thing to know is that drop zones need to be visible (i.e. their Visibility)
-                     * property set to something other than Gone or Invisible) in order to be considered. A nice workaround
-                     * if you need them hidden initially is to have their layout_height set to 1.
-                     */
-
                     break;
                 case DragAction.Entered:
+                    (sender as ImageButton).SetBackgroundColor(Color.Green);
+                    break;
                 case DragAction.Exited:
-                    /* These two states allows you to know when the dragged view is contained atop your drop zone.
-                     * Traditionally you will use that tip to display a focus ring or any other similar mechanism
-                     * to advertise your view as a drop zone to the user.
-                     */
-
+                    if((sender as ImageButton) != focusedImageButton)
+                    {
+                        (sender as ImageButton).SetBackgroundColor(Color.ParseColor("#F3DBDBDB"));
+                    }
                     break;
+
                 case DragAction.Drop:
-                    /* This state is used when the user drops the view on your drop zone. If you want to accept the drop,
-                     *  set the Handled value to true like before.
-                     */
                     e.Handled = true;
-                    /* It's also probably time to get a bit of the data associated with the drag to know what
-                     * you want to do with the information.
-                     */
                     var data = e.Event.ClipData.GetItemAt(0).Text;
+                    ImageButton senderImageButton = sender as ImageButton;
+                    string senderTag = senderImageButton.GetTag(Resource.String.TagValue1).ToString();
+                    string draggedTag = draggingImageButton.GetTag(Resource.String.TagValue1).ToString();
 
+                    int compareId = CompareCardTypes_DragnDrop_Selection(senderTag, draggedTag, draggingImageButton);
+
+                    switch (compareId)
+                    {
+                        case 0:
+                                RemoveFocus();
+                            break;
+                        case 1:
+                            ScheduleActivity(draggingImageButton, senderImageButton);
+                            RemoveFocus();
+                            break;
+                        case 2:
+                            ChangeFocus(senderImageButton);
+                            break;
+                        case 3:
+                            ScheduleActivity(senderImageButton, draggingImageButton);
+                            senderImageButton.SetBackgroundColor(Color.ParseColor("#F3DBDBDB"));
+                            RemoveFocus();
+                            break;
+                        case 4:
+                            ScheduleMotivationGoal(senderImageButton);
+                            break;
+                        case 5:
+                            RemoveMotivationGoal();
+                            break;
+                        case 6:
+                            break;
+                    }
                     break;
+
                 case DragAction.Ended:
-                    /* This is the final state, where you still have possibility to cancel the drop happened.
-                     * You will generally want to set Handled to true.
-                     */
-                    e.Handled = true;
                     break;
             }
         }
 
+
+
         private void AnyCardClicked(object sender, EventArgs e)
         {
+
             string FocusedImageButtonTag = null;
             ImageButton senderImageButton = (ImageButton)sender;
             string senderTag = senderImageButton.GetTag(Resource.String.TagValue1).ToString();
 
-            if (focusedImageButton != null)
-                FocusedImageButtonTag = focusedImageButton.GetTag(Resource.String.TagValue1).ToString();
 
-            int compareId = CompareCardTypes_DragnDrop_Selection(senderTag, FocusedImageButtonTag);
+            if (focusedImageButton != null)
+            {
+                FocusedImageButtonTag = focusedImageButton.GetTag(Resource.String.TagValue1).ToString();
+            }
+
+            int compareId = CompareCardTypes_DragnDrop_Selection(senderTag, FocusedImageButtonTag, focusedImageButton);
 
             switch (compareId)
             {
@@ -246,7 +307,6 @@ namespace Timetable_Tape
                 case 6:
                     break;
             }
-
         }
 
         #endregion
@@ -265,22 +325,21 @@ namespace Timetable_Tape
 
             //getting all activity cards
             CardType cardtype = cardTypes[0];
-            foreach(Card card in cardtype.Cards)
+            foreach (Card card in cardtype.Cards)
             {
-                AddNewImageButtonToGridlayout("Activity_Imagebutton" + activityId, Android.Net.Uri.Parse(card.PhotoPath), _activities_GridLayout, AnyCardClicked, card);
+                AddNewImageButtonToGridlayout("Activity_Imagebutton" + activityId, Android.Net.Uri.Parse(card.PhotoPath), _activities_GridLayout, AnyCardClicked, AnyCardTouched, AnyCardDragged, card);
             }
-
             AddNewImageButtonToGridlayout("AddNewActivity", getUriFromResourceId(Resource.Drawable.plusSign), _activities_GridLayout, AddActivityOrMotivationGoalButtonClicked);
         }
 
-        
+
 
         private void LoadMotivationGoals()
         {
             //removing all cards
             _motivation_Goals_GridLayout.RemoveAllViews();
 
-            activityId = 0;
+            motivationGoalId = 0;
 
             cardTypes = new List<CardType>(scheduleManager.Cards.CardTypes.GetCardTypes());
             IEnumerable<Card> cards = scheduleManager.Cards.GetCards();
@@ -289,14 +348,14 @@ namespace Timetable_Tape
             CardType cardtype = cardTypes[1];
             foreach (Card card in cardtype.Cards)
             {
-                AddNewImageButtonToGridlayout("MotivationGoal_Imagebutton" + motivationGoalId, Android.Net.Uri.Parse(card.PhotoPath), _motivation_Goals_GridLayout, AnyCardClicked, card);
+                AddNewImageButtonToGridlayout("MotivationGoal_Imagebutton" + motivationGoalId, Android.Net.Uri.Parse(card.PhotoPath), _motivation_Goals_GridLayout, AnyCardClicked, null, null, card);
             }
 
             AddNewImageButtonToGridlayout("AddNewMotivationGoal", getUriFromResourceId(Resource.Drawable.plusSign), _motivation_Goals_GridLayout, AddActivityOrMotivationGoalButtonClicked);
         }
 
 
-        private void AddNewImageButtonToGridlayout(string id, Android.Net.Uri PhotoPath, GridLayout gridlayout , EventHandler onclickEvent = null, Card card = null, Boolean isScheduledMotivationGoal = false)
+        private void AddNewImageButtonToGridlayout(string idTag, Android.Net.Uri PhotoPath, GridLayout gridlayout, EventHandler onclickEvent = null, EventHandler<View.TouchEventArgs> ontouchevent = null,EventHandler<View.DragEventArgs> ondragevent = null, Card card = null)
         {
             ImageButton imagebutton = null;
             int cardTypeId = 0;
@@ -333,15 +392,10 @@ namespace Timetable_Tape
             JavaObject<Card> Javacard = new JavaObject<Card>(card);
 
             //setting id tag
-            imagebutton.SetTag(Resource.String.TagValue1, id);
+            imagebutton.SetTag(Resource.String.TagValue1, idTag);
             imagebutton.SetTag(Resource.String.TagValue2, Javacard);
 
-
-
-            if (isScheduledMotivationGoal)
-            {
-                imagebutton.SetBackgroundColor(Color.Red);
-            }
+            
 
             //adding view to gridlayout
             gridlayout.AddView(imageButtonView);
@@ -352,10 +406,38 @@ namespace Timetable_Tape
                 imagebutton.Click += onclickEvent;
             }
 
+            if(ontouchevent != null)
+            {
+                imagebutton.Touch += ontouchevent;
+            }
+
+            if (ondragevent != null)
+            {
+                imagebutton.Drag += ondragevent;
+            }
+
+
+            if (scheduledMotivationGoalImageButton != null && idTag == scheduledMotivationGoalImageButton.GetTag(Resource.String.TagValue1).ToString())
+            {
+                ScheduleMotivationGoal(imagebutton);
+            }
+
+            if (focusedImageButton != null && idTag == focusedImageButton.GetTag(Resource.String.TagValue1).ToString())
+            {
+                imagebutton.SetBackgroundColor(Color.Green);
+                focusedImageButton = imagebutton;
+            }
+
+            if(idTag.Equals("Scheduled_MotvationGoal_Imagebutton"))
+            {
+                imagebutton.SetBackgroundColor(Color.Red);
+            }
+
+
             GC.Collect();
         }
 
-        
+
 
         private void ChoosePhotoIfHasCamera()
         {
@@ -372,7 +454,8 @@ namespace Timetable_Tape
             {
                 dialogBuilder.SetTitle(GetString(Resource.String.add_photo));
 
-                dialogBuilder.SetItems(items, (d, args) => {
+                dialogBuilder.SetItems(items, (d, args) =>
+                {
 
                     /* Taking a photo */
                     if (args.Which == 0)
@@ -465,7 +548,7 @@ namespace Timetable_Tape
 
 
 
-        
+
 
         private void ScheduleActivity(ImageButton activityImageButton, ImageButton scheduleItemImageButton)
         {
@@ -498,7 +581,7 @@ namespace Timetable_Tape
             _schedule_GridLayout.RemoveAllViews();
             scheduledItemId = 0;
 
-            foreach(ScheduleItem scheduledItem in scheduledItems)
+            foreach (ScheduleItem scheduledItem in scheduledItems)
             {
                 Card card = new Card();
                 if (scheduledItem.CardId != 0)
@@ -509,12 +592,12 @@ namespace Timetable_Tape
                 {
                     card.PhotoPath = getUriFromResourceId(Resource.Drawable.emptyButton).ToString();
                 }
-                AddNewImageButtonToGridlayout("ScheduledItem_Imagebutton" + scheduledItemId, Android.Net.Uri.Parse(card.PhotoPath), _schedule_GridLayout, AnyCardClicked,card);
+                AddNewImageButtonToGridlayout("ScheduledItem_Imagebutton" + scheduledItemId, Android.Net.Uri.Parse(card.PhotoPath), _schedule_GridLayout, AnyCardClicked, AnyCardTouched, AnyCardDragged, card);
             }
-            if(scheduledMotivationGoalImageButton != null)
+            if (scheduledMotivationGoalImageButton != null)
             {
                 JavaObject<Card> card = (JavaObject<Card>)scheduledMotivationGoalImageButton.GetTag(Resource.String.TagValue2);
-                AddNewImageButtonToGridlayout("Scheduled_MotvationGoal_Imagebutton", Android.Net.Uri.Parse(card.value.PhotoPath), _schedule_GridLayout,null,null,true);
+                AddNewImageButtonToGridlayout("Scheduled_MotvationGoal_Imagebutton", Android.Net.Uri.Parse(card.value.PhotoPath), _schedule_GridLayout, null, null, null, null);
             }
         }
 
@@ -523,7 +606,7 @@ namespace Timetable_Tape
 
             newFocusedImageButton.SetBackgroundColor(Color.Green);
 
-             RemoveFocus();
+            RemoveFocus();
 
             focusedImageButton = newFocusedImageButton;
         }
@@ -536,7 +619,7 @@ namespace Timetable_Tape
             focusedImageButton = null;
         }
 
-        
+
 
         private void RemoveMotivationGoal()
         {
@@ -545,13 +628,14 @@ namespace Timetable_Tape
                 scheduledMotivationGoalImageButton.SetBackgroundColor(Color.ParseColor("#F3DBDBDB"));
             }
             scheduledMotivationGoalImageButton = null;
+            LoadScheduledItems();
         }
 
-        private int CompareCardTypes_DragnDrop_Selection(string CardSenderTag, string currentCardTag)
+        private int CompareCardTypes_DragnDrop_Selection(string CardSenderTag, string currentCardTag,ImageButton previousFocussedOrDraggedImagebutton)
         {
             if (CardSenderTag.Contains("MotivationGoal"))
             {
-                if (scheduledMotivationGoalImageButton!= null && CardSenderTag == scheduledMotivationGoalImageButton.GetTag(Resource.String.TagValue1).ToString())
+                if (scheduledMotivationGoalImageButton != null && CardSenderTag == scheduledMotivationGoalImageButton.GetTag(Resource.String.TagValue1).ToString())
                 {
                     return 5;
                 }
@@ -561,38 +645,37 @@ namespace Timetable_Tape
                 }
             }
 
-            if (focusedImageButton == null)
+            if (previousFocussedOrDraggedImagebutton == null)
             {
-                
+
                 return 2;
             }
 
             else
             {
-                string FocusedImageButtonTag = focusedImageButton.GetTag(Resource.String.TagValue1).ToString();
+                string FocusedOrDraggedImageButtonTag = previousFocussedOrDraggedImagebutton.GetTag(Resource.String.TagValue1).ToString();
                 if (CardSenderTag == currentCardTag)
                 {
                     return 0;
                 }
-                else if (CardSenderTag.Contains("ScheduledItem") && FocusedImageButtonTag.Contains("Activity"))
+                else if (CardSenderTag.Contains("ScheduledItem") && FocusedOrDraggedImageButtonTag.Contains("Activity"))
                 {
                     return 1;
                 }
-                else if (CardSenderTag.Contains("Activity") && FocusedImageButtonTag.Contains("Activity")
-               || CardSenderTag.Contains("ScheduledItem") && FocusedImageButtonTag.Contains("ScheduledItem"))
+                else if (CardSenderTag.Contains("Activity") && FocusedOrDraggedImageButtonTag.Contains("Activity")
+               || CardSenderTag.Contains("ScheduledItem") && FocusedOrDraggedImageButtonTag.Contains("ScheduledItem"))
                 {
                     return 2;
                 }
-                else if (CardSenderTag.Contains("Activity") && FocusedImageButtonTag.Contains("ScheduledItem"))
+                else if (CardSenderTag.Contains("Activity") && FocusedOrDraggedImageButtonTag.Contains("ScheduledItem"))
                 {
                     return 3;
                 }
                 return 6;
             }
         }
+
         #endregion
-
-
 
     }
 
