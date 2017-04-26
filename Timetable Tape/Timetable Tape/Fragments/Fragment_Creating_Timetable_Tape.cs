@@ -66,6 +66,8 @@ namespace Timetable_Tape
 
         private bool _fromGallery;
 
+        Color normalColor;
+
 
         View imageButtonView;
         View view;
@@ -136,11 +138,10 @@ namespace Timetable_Tape
             if (e.Event.Action == MotionEventActions.Down)
             {
                 timerStart = Java.Lang.JavaSystem.CurrentTimeMillis();
-                
             }
             if(e.Event.Action == MotionEventActions.Up)
             {
-                if (Java.Lang.JavaSystem.CurrentTimeMillis() - timerStart < 3500)
+                if (Java.Lang.JavaSystem.CurrentTimeMillis() - timerStart < 2500)
                 {
                     (sender as ImageButton).PerformClick();
                 }
@@ -256,6 +257,9 @@ namespace Timetable_Tape
                             RemoveMotivationGoal();
                             break;
                         case 6:
+                            switchScheduledItems(senderImageButton, draggingImageButton);
+                            break;
+                        case 7:
                             break;
                     }
                     break;
@@ -264,8 +268,6 @@ namespace Timetable_Tape
                     break;
             }
         }
-
-
 
         private void AnyCardClicked(object sender, EventArgs e)
         {
@@ -305,8 +307,16 @@ namespace Timetable_Tape
                     RemoveMotivationGoal();
                     break;
                 case 6:
+                    ChangeFocus(senderImageButton);
+                    break;
+                case 7:
                     break;
             }
+        }
+
+        private void ActivityOrMotivationGoalLongClick(object sender, EventArgs e)
+        {
+
         }
 
         #endregion
@@ -327,7 +337,7 @@ namespace Timetable_Tape
             CardType cardtype = cardTypes[0];
             foreach (Card card in cardtype.Cards)
             {
-                AddNewImageButtonToGridlayout("Activity_Imagebutton" + activityId, Android.Net.Uri.Parse(card.PhotoPath), _activities_GridLayout, AnyCardClicked, AnyCardTouched, AnyCardDragged, card);
+                AddNewImageButtonToGridlayout("Activity_Imagebutton" + activityId, Android.Net.Uri.Parse(card.PhotoPath), _activities_GridLayout, AnyCardClicked, AnyCardTouched, AnyCardDragged, ActivityOrMotivationGoalLongClick, card);
             }
             AddNewImageButtonToGridlayout("AddNewActivity", getUriFromResourceId(Resource.Drawable.plusSign), _activities_GridLayout, AddActivityOrMotivationGoalButtonClicked);
         }
@@ -348,14 +358,14 @@ namespace Timetable_Tape
             CardType cardtype = cardTypes[1];
             foreach (Card card in cardtype.Cards)
             {
-                AddNewImageButtonToGridlayout("MotivationGoal_Imagebutton" + motivationGoalId, Android.Net.Uri.Parse(card.PhotoPath), _motivation_Goals_GridLayout, AnyCardClicked, null, null, card);
+                AddNewImageButtonToGridlayout("MotivationGoal_Imagebutton" + motivationGoalId, Android.Net.Uri.Parse(card.PhotoPath), _motivation_Goals_GridLayout, AnyCardClicked, null, null, ActivityOrMotivationGoalLongClick, card);
             }
 
             AddNewImageButtonToGridlayout("AddNewMotivationGoal", getUriFromResourceId(Resource.Drawable.plusSign), _motivation_Goals_GridLayout, AddActivityOrMotivationGoalButtonClicked);
         }
 
 
-        private void AddNewImageButtonToGridlayout(string idTag, Android.Net.Uri PhotoPath, GridLayout gridlayout, EventHandler onclickEvent = null, EventHandler<View.TouchEventArgs> ontouchevent = null,EventHandler<View.DragEventArgs> ondragevent = null, Card card = null)
+        private void AddNewImageButtonToGridlayout(string idTag, Android.Net.Uri PhotoPath, GridLayout gridlayout, EventHandler onclickEvent = null, EventHandler<View.TouchEventArgs> ontouchevent = null,EventHandler<View.DragEventArgs> ondragevent = null,EventHandler<View.LongClickEventArgs> onlongclickevent = null, Card card = null)
         {
             ImageButton imagebutton = null;
             int cardTypeId = 0;
@@ -414,6 +424,11 @@ namespace Timetable_Tape
             if (ondragevent != null)
             {
                 imagebutton.Drag += ondragevent;
+            }
+
+            if(onlongclickevent != null)
+            {
+                imagebutton.LongClick += onlongclickevent;
             }
 
 
@@ -550,31 +565,7 @@ namespace Timetable_Tape
 
 
 
-        private void ScheduleActivity(ImageButton activityImageButton, ImageButton scheduleItemImageButton)
-        {
-            string scheduleItemImageButtonId = scheduleItemImageButton.GetTag(Resource.String.TagValue1).ToString();
-            //getting last number from idTag(which is the orderId)
-            int orderId = int.Parse(scheduleItemImageButtonId.Substring(("ScheduledItem_Imagebutton").Length, scheduleItemImageButtonId.Length - ("ScheduledItem_Imagebutton").Length));
-
-            //getting cardId from activityImagebutton
-            JavaObject<Card> card = (JavaObject<Card>)activityImageButton.GetTag(Resource.String.TagValue2);
-
-            scheduledItems[orderId - 1].CardId = card.value.Id;
-
-            LoadScheduledItems();
-        }
-
-        private void ScheduleMotivationGoal(ImageButton motivationGoalImageButton)
-        {
-            RemoveMotivationGoal();
-
-            //getting cardId from motivationGoalImagebutton
-            scheduledMotivationGoalImageButton = motivationGoalImageButton;
-
-            scheduledMotivationGoalImageButton.SetBackgroundColor(Color.Red);
-
-            LoadScheduledItems();
-        }
+        
 
         private void LoadScheduledItems()
         {
@@ -592,7 +583,7 @@ namespace Timetable_Tape
                 {
                     card.PhotoPath = getUriFromResourceId(Resource.Drawable.emptyButton).ToString();
                 }
-                AddNewImageButtonToGridlayout("ScheduledItem_Imagebutton" + scheduledItemId, Android.Net.Uri.Parse(card.PhotoPath), _schedule_GridLayout, AnyCardClicked, AnyCardTouched, AnyCardDragged, card);
+                AddNewImageButtonToGridlayout("ScheduledItem_Imagebutton" + scheduledItemId, Android.Net.Uri.Parse(card.PhotoPath), _schedule_GridLayout, AnyCardClicked, AnyCardTouched, AnyCardDragged, null, card);
             }
             if (scheduledMotivationGoalImageButton != null)
             {
@@ -662,8 +653,7 @@ namespace Timetable_Tape
                 {
                     return 1;
                 }
-                else if (CardSenderTag.Contains("Activity") && FocusedOrDraggedImageButtonTag.Contains("Activity")
-               || CardSenderTag.Contains("ScheduledItem") && FocusedOrDraggedImageButtonTag.Contains("ScheduledItem"))
+                else if (CardSenderTag.Contains("Activity") && FocusedOrDraggedImageButtonTag.Contains("Activity"))
                 {
                     return 2;
                 }
@@ -671,9 +661,58 @@ namespace Timetable_Tape
                 {
                     return 3;
                 }
-                return 6;
+                else if (CardSenderTag.Contains("ScheduledItem") && FocusedOrDraggedImageButtonTag.Contains("ScheduledItem"))
+                {
+                    return 6;
+                }
+                    return 7;
             }
         }
+
+        private void ScheduleActivity(ImageButton activityImageButton, ImageButton scheduleItemImageButton)
+        {
+            string scheduleItemImageButtonId = scheduleItemImageButton.GetTag(Resource.String.TagValue1).ToString();
+            //getting last number from idTag(which is the orderId)
+            int orderId = int.Parse(scheduleItemImageButtonId.Substring(("ScheduledItem_Imagebutton").Length, scheduleItemImageButtonId.Length - ("ScheduledItem_Imagebutton").Length))-1;
+
+            //getting cardId from activityImagebutton
+            JavaObject<Card> card = (JavaObject<Card>)activityImageButton.GetTag(Resource.String.TagValue2);
+
+            scheduledItems[orderId].CardId = card.value.Id;
+
+            LoadScheduledItems();
+        }
+
+        private void ScheduleMotivationGoal(ImageButton motivationGoalImageButton)
+        {
+            RemoveMotivationGoal();
+
+            //getting cardId from motivationGoalImagebutton
+            scheduledMotivationGoalImageButton = motivationGoalImageButton;
+
+            scheduledMotivationGoalImageButton.SetBackgroundColor(Color.Red);
+
+            LoadScheduledItems();
+        }
+
+
+        private void switchScheduledItems(ImageButton senderImageButton, ImageButton draggingImageButton)
+        {
+            string senderImageButtonId = senderImageButton.GetTag(Resource.String.TagValue1).ToString();
+            int senderOrderId = int.Parse(senderImageButtonId.Substring(("ScheduledItem_Imagebutton").Length, senderImageButtonId.Length - ("ScheduledItem_Imagebutton").Length)) - 1;
+
+
+            string draggingImageButtonId = draggingImageButton.GetTag(Resource.String.TagValue1).ToString();
+            int draggingOrderId = int.Parse(draggingImageButtonId.Substring(("ScheduledItem_Imagebutton").Length, draggingImageButtonId.Length - ("ScheduledItem_Imagebutton").Length)) - 1;
+
+            ScheduleItem senderScheduleitem = scheduledItems[senderOrderId];
+            scheduledItems[senderOrderId] = scheduledItems[draggingOrderId];
+            scheduledItems[draggingOrderId] = senderScheduleitem;
+
+            RemoveFocus();
+            LoadScheduledItems();
+        }
+
 
         #endregion
 
