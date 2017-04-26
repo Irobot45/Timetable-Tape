@@ -10,5 +10,6 @@
     <string name="add_photo">Add picture</string>
     <string name="choose_photo">Choose picture</string>
     <string name="cancel_button">Cancel</string>
+    <string name="delete_button">Delete</string>
   
 </resources>

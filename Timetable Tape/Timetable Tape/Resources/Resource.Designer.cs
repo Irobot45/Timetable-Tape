@@ -201,6 +201,9 @@ namespace Timetable_Tape
 			// aapt resource value: 0x7f040008
 			public const int choose_photo = 2130968584;
 			
+			// aapt resource value: 0x7f04000a
+			public const int delete_button = 2130968586;
+			
 			// aapt resource value: 0x7f040005
 			public const int take_a_photo = 2130968581;
 			

@@ -316,7 +316,41 @@ namespace Timetable_Tape
 
         private void ActivityOrMotivationGoalLongClick(object sender, EventArgs e)
         {
+            /* Preparing dialog items */
+            string[] items =
+            {
+                GetString(Resource.String.delete_button),
+                GetString(Resource.String.cancel_button)
+            };
 
+            /* Constructing dialog */
+            using (var dialogBuilder = new AlertDialog.Builder(Activity))
+            {
+                dialogBuilder.SetTitle(GetString(Resource.String.add_photo));
+                dialogBuilder.SetItems(items, (d, args) =>
+                {
+                    if(args.Which == 0)
+                    {
+                        DeleteCard((sender as ImageButton));
+                    }
+                });
+
+                dialogBuilder.Show();
+            }
+        }
+
+        private void DeleteCard(ImageButton imageButton)
+        {
+
+            JavaObject<Card> card = (JavaObject<Card>)imageButton.GetTag(Resource.String.TagValue2);
+            scheduleManager.Cards.DeleteCard(card.value.Id);
+            if (imageButton.GetTag(Resource.String.TagValue1).ToString().Contains("MotivationGoal"))
+            {
+                LoadMotivationGoals();
+            } else if (imageButton.GetTag(Resource.String.TagValue1).ToString().Contains("Activity"))
+            {
+                LoadActivities();
+            }
         }
 
         #endregion
