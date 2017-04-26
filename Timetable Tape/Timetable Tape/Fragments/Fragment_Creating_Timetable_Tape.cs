@@ -339,19 +339,7 @@ namespace Timetable_Tape
             }
         }
 
-        private void DeleteCard(ImageButton imageButton)
-        {
-
-            JavaObject<Card> card = (JavaObject<Card>)imageButton.GetTag(Resource.String.TagValue2);
-            scheduleManager.Cards.DeleteCard(card.value.Id);
-            if (imageButton.GetTag(Resource.String.TagValue1).ToString().Contains("MotivationGoal"))
-            {
-                LoadMotivationGoals();
-            } else if (imageButton.GetTag(Resource.String.TagValue1).ToString().Contains("Activity"))
-            {
-                LoadActivities();
-            }
-        }
+        
 
         #endregion
 
@@ -746,6 +734,23 @@ namespace Timetable_Tape
             RemoveFocus();
             LoadScheduledItems();
         }
+
+        private void DeleteCard(ImageButton imageButton)
+        {
+
+            JavaObject<Card> card = (JavaObject<Card>)imageButton.GetTag(Resource.String.TagValue2);
+            scheduleManager.Cards.DeleteCard(card.value.Id);
+            if (imageButton.GetTag(Resource.String.TagValue1).ToString().Contains("MotivationGoal"))
+            {
+                LoadMotivationGoals();
+            }
+            else if (imageButton.GetTag(Resource.String.TagValue1).ToString().Contains("Activity"))
+            {
+                LoadActivities();
+            }
+        }
+
+
 
 
         #endregion
