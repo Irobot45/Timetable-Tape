@@ -49,6 +49,7 @@ namespace Timetable_Tape
         GridLayout _schedule_GridLayout;
         GridLayout _activities_GridLayout;
         GridLayout _motivation_Goals_GridLayout;
+        Button _createScheduleButton;
 
         ScheduleManager scheduleManager;
 
@@ -99,6 +100,7 @@ namespace Timetable_Tape
             _activities_GridLayout = view.FindViewById<GridLayout>(Resource.Id.Activities_GridLayout);
             _motivation_Goals_GridLayout = view.FindViewById<GridLayout>(Resource.Id.Motivation_Goals_GridLayout);
             _date_Textview = view.FindViewById<TextView>(Resource.Id.Date_Textview);
+            _createScheduleButton = view.FindViewById<Button>(Resource.Id.Create_Schedule_Button);
 
 
             //setting tags
@@ -107,6 +109,7 @@ namespace Timetable_Tape
 
             //Setting events 
             _addEmptyScheduleItemimageButton.Click += AddEmptyScheduledItem;
+            _createScheduleButton.Click += CreateSchedule;
 
             //setting values
             _bitmap = null;
@@ -121,6 +124,34 @@ namespace Timetable_Tape
             return view;
         }
 
+        private void CreateSchedule(object sender, EventArgs e)
+        {
+            Schedule schedule = new Schedule();
+            //TODO: change UserID
+            schedule.UserId = 0;
+            schedule.CreateTime = DateTime.Today;
+
+            List<ScheduleItem> savedScheduleItems = new List<ScheduleItem>();
+
+            int orderNumber = 0;
+
+            foreach (ScheduleItem scheduleItem in scheduledItems)
+            {
+                if (scheduleItem.CardId != 0)
+                {
+                    scheduleItem.OrderNumber = orderNumber++;
+                    savedScheduleItems.Add(scheduleItem);
+                }
+            }
+            if (scheduledMotivationGoalImageButton != null)
+            {
+                JavaObject<Card> javaCard = (JavaObject<Card>)scheduledMotivationGoalImageButton.GetTag(Resource.String.TagValue2);
+                savedScheduleItems.Add(new ScheduleItem() { OrderNumber = orderNumber++, CardId = javaCard.value.Id });
+            }
+            schedule.ScheduleItems = savedScheduleItems;
+            scheduleManager.comple(0,)
+        }
+
         void AnyCardTouched(object sender, View.TouchEventArgs e)
         {
             if (e.Event.Action == MotionEventActions.Move)
@@ -129,6 +160,7 @@ namespace Timetable_Tape
                 var data = ClipData.NewPlainText("name", "Element 1");
 
                 draggingImageButton = sender as ImageButton;
+
                 ChangeFocus(draggingImageButton);
 
                 // Start dragging and pass data
@@ -254,7 +286,7 @@ namespace Timetable_Tape
                             ScheduleMotivationGoal(senderImageButton);
                             break;
                         case 5:
-                            RemoveMotivationGoal();
+                            RemoveFocusMotivationGoal();
                             break;
                         case 6:
                             switchScheduledItems(senderImageButton, draggingImageButton);
@@ -304,7 +336,7 @@ namespace Timetable_Tape
                     ScheduleMotivationGoal(senderImageButton);
                     break;
                 case 5:
-                    RemoveMotivationGoal();
+                    RemoveFocusMotivationGoal();
                     break;
                 case 6:
                     ChangeFocus(senderImageButton);
@@ -331,7 +363,7 @@ namespace Timetable_Tape
                 {
                     if(args.Which == 0)
                     {
-                        DeleteCard((sender as ImageButton));
+                        DeleteActivityOrMotivationGoal((sender as ImageButton));
                     }
                 });
 
@@ -418,7 +450,7 @@ namespace Timetable_Tape
 
             if (card == null)
             {
-                card = new Card() { CardTypeId = cardTypeId, PhotoPath = PhotoPath.ToString(), IsDeleted = false };
+                card = new Card() {PhotoPath = PhotoPath.ToString(), IsDeleted = false };
             }
 
             JavaObject<Card> Javacard = new JavaObject<Card>(card);
@@ -426,7 +458,6 @@ namespace Timetable_Tape
             //setting id tag
             imagebutton.SetTag(Resource.String.TagValue1, idTag);
             imagebutton.SetTag(Resource.String.TagValue2, Javacard);
-
             
 
             //adding view to gridlayout
@@ -465,9 +496,18 @@ namespace Timetable_Tape
                 focusedImageButton = imagebutton;
             }
 
-            if(idTag.Equals("Scheduled_MotvationGoal_Imagebutton"))
+            if (idTag.Equals("Scheduled_MotvationGoal_Imagebutton"))
             {
                 imagebutton.SetBackgroundColor(Color.Red);
+                newScheduledItemId++;
+            }
+
+            if (cardTypeId == 0)
+            {
+                ImageButton deleteScheduledItemImageButton = (ImageButton)imageButtonView.FindViewById(Resource.Id.imageButton_Delete_ScheduledItem);
+
+                deleteScheduledItemImageButton.SetTag(Resource.String.TagValue1, newScheduledItemId);
+                deleteScheduledItemImageButton.Click += DeleteScheduledItem;
             }
 
 
@@ -634,7 +674,7 @@ namespace Timetable_Tape
 
 
 
-        private void RemoveMotivationGoal()
+        private void RemoveFocusMotivationGoal()
         {
             if (scheduledMotivationGoalImageButton != null)
             {
@@ -707,7 +747,7 @@ namespace Timetable_Tape
 
         private void ScheduleMotivationGoal(ImageButton motivationGoalImageButton)
         {
-            RemoveMotivationGoal();
+            RemoveFocusMotivationGoal();
 
             //getting cardId from motivationGoalImagebutton
             scheduledMotivationGoalImageButton = motivationGoalImageButton;
@@ -735,7 +775,7 @@ namespace Timetable_Tape
             LoadScheduledItems();
         }
 
-        private void DeleteCard(ImageButton imageButton)
+        private void DeleteActivityOrMotivationGoal(ImageButton imageButton)
         {
 
             JavaObject<Card> card = (JavaObject<Card>)imageButton.GetTag(Resource.String.TagValue2);
@@ -748,6 +788,29 @@ namespace Timetable_Tape
             {
                 LoadActivities();
             }
+        }
+
+        private void DeleteScheduledItem(object sender, EventArgs e)
+        {
+            ImageButton deleteImageButton = sender as ImageButton;
+            int imageId = int.Parse(deleteImageButton.GetTag(Resource.String.TagValue1).ToString());
+
+
+            if (scheduledMotivationGoalImageButton != null && imageId == scheduledItems.Count + 1)
+            {
+                RemoveFocusMotivationGoal();
+            }
+            else
+            {
+                imageId--;
+                while (imageId < scheduledItems.Count - 1)
+                {
+                    scheduledItems[imageId] = scheduledItems[imageId + 1];
+                    imageId++;
+                }
+                scheduledItems.RemoveAt(imageId);
+            }
+            LoadScheduledItems();
         }
 
 

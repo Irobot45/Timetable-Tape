@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orient
-                  >
-  <ImageButton
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="190dp"
-  android:layout_height="190dp"
-  android:layout_marginLeft="15dp"
-  android:layout_marginRight="15dp"
-  android:id="@+id/imageButton_Card"
-    android:scaleType="fitXY"
-    android:padding="20dp"/>
-</LinearLayout>
+    android:layout_height="wrap_content">
+    <ImageButton
+        android:layout_width="190dp"
+        android:layout_height="190dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:id="@+id/imageButton_Card"
+        android:scaleType="fitXY"
+        android:padding="20dp" />
+    <ImageButton
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="15dp"
+        android:id="@+id/imageButton_Delete_ScheduledItem"
+        android:scaleType="fitXY"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/imageButton_Card"
+        android:src="@drawable/thrashcan" />
+</RelativeLayout>

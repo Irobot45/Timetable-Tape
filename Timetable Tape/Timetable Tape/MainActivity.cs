@@ -14,6 +14,7 @@ using Android.Provider;
 using Android.Database;
 using System.Collections.Generic;
 using Android.Content.PM;
+using Timetable_Tape.Fragments;
 
 namespace Timetable_Tape
 {
@@ -22,6 +23,7 @@ namespace Timetable_Tape
     {
         public static MainActivity Current { get; private set; }
         public ScheduleManager scheduleManager { get; set; }
+        public InteractiveTimetable.BusinessLayer.Managers.UserManager userManager { get; set; }
         public string projectPath { get; set; }
         public bool HasCamera { get; private set; }
         public SQLiteConnection connection { get; set; }
@@ -47,12 +49,15 @@ namespace Timetable_Tape
             SetContentView(Resource.Layout.Main);
 
             //Loading create timetable fragment
+
             var trans = FragmentManager.BeginTransaction();
             trans.Add(Resource.Id.FragmentContainer, new Fragment_Creating_Timetable_Tape(), "Fragment_Creating_Timetable_Tape");
             trans.Commit();
 
+            //var trans = FragmentManager.BeginTransaction();
+            //trans.Add(Resource.Id.FragmentContainer, new Fragment_Children_Schedules(), "Fragment_Children_Schedules");
+            //trans.Commit();
 
-            
 
             // Set our view from the "main" layout resource
             Schedule schedule = new Schedule();
@@ -70,6 +75,10 @@ namespace Timetable_Tape
             // Creating scheduleManager
             scheduleManager = new ScheduleManager(connection);
 
+            // Creating userManager
+            userManager = new InteractiveTimetable.BusinessLayer.Managers.UserManager(connection);
+
+            
         }
 
         public string GetPathToImage(Activity activity, Android.Net.Uri uri)
