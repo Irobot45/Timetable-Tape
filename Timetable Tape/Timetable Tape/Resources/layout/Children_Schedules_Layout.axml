@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/Main_LinearLayout">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/Title_LinearLayout"
+        android:layout_weight="34">
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/Title_Textview"
+          android:text="@string/Children_Schedules_Layout_Title"
+          android:textSize="48sp"
+          android:textColor="@android:color/black"
+          android:layout_weight="16" />
+      <!-- Date and Time textview-->
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/Date_Textview"
+          android:textSize="36sp"
+          android:textColor="@android:color/black"
+          android:layout_weight="1" />
+      <TextClock xmlns:p2="http://xamarin.com/mono/android/designer-default"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="36sp"
+          android:textColor="@android:color/black"
+          android:id="@+id/DigitalClock"
+          android:layout_weight="1"
+          android:format12Hour="hh:mm" />
+    </LinearLayout>
+
+
+  <View
+      android:id="@+id/divider"
+      android:layout_width="match_parent"
+      android:layout_height="6dp"
+      android:background="#000000"
+        android:layout_marginBottom="5dp" />
+  
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/Children_Schedules_Linear_Layout" />
+    </ScrollView>
+</LinearLayout>

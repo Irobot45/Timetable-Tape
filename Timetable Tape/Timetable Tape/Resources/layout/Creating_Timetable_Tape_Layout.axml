@@ -4,8 +4,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:gridSpec="1|8|#0093eeff|K:#ee8700ff:16,l:72,l:16,r|S:#83ee00ff:16,0,l:16,56,l:16,0,r"
     android:id="@+id/Main_LinearLayout">
 <!-- Title content view -->
     <LinearLayout
@@ -13,12 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:minWidth="25px"
-        android:minHeight="25px"
         android:id="@+id/Title_LinearLayout">
+        <ImageButton
+            android:layout_weight="1"
+            android:layout_width="50dp"
+            android:layout_height="120dp"
+            android:id="@+id/Back_ImageButton"
+            android:src="@drawable/back_button"
+            android:scaleType="fitXY"
+            android:layout_marginLeft="20dp" />
     <!-- Title textview -->
         <TextView
-            android:text="Creating a timetable tape"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/Title_Textview"
@@ -43,6 +46,12 @@
             android:layout_weight="1"
             android:format12Hour="hh:mm" />
     </LinearLayout>
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:background="#000000"
+        android:layout_marginBottom="5dp" />
 <!-- The timetable tape content view -->
     <LinearLayout
         android:orientation="horizontal"
@@ -60,9 +69,9 @@
             android:minHeight="25px">
         <!-- Timetable tape scrollview-->
             <HorizontalScrollView
-                android:layout_width="2300dp"
+                android:layout_width="2100dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="10"
+                android:layout_weight="8"
                 android:id="@+id/Schedule_Scrollview"
                 android:scrollbars="horizontal">
                 <GridLayout
@@ -72,31 +81,46 @@
                     android:id="@+id/Schedule_GridLayout"
                     android:rowCount="1" />
             </HorizontalScrollView>
-          <LinearLayout
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/Schedule_Scrollview"
-                android:orientation="vertical">
-            <ImageButton
-                android:src="@drawable/plussign"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:id="@+id/Add_ScheduleItem_ImageButton"
-                android:scaleType="fitXY"
-                android:padding="20dp" />
-            <Button
-                android:id="@+id/Create_Schedule_Button"
-                android:text="Create"
-                android:layout_width="120dp"
-                android:layout_height="70dp"
-                android:layout_marginLeft="20dp"/>
-            
-              </LinearLayout>
+                android:orientation="horizontal">
+                <ImageButton
+                    android:src="@drawable/plussign"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:id="@+id/Add_ScheduleItem_ImageButton"
+                    android:scaleType="fitXY"
+                    android:padding="20dp" />
+                <ImageButton
+                    android:id="@+id/Create_Schedule_Button"
+                    android:src="@drawable/save_icon"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_marginRight="20dp"
+                    android:padding="10dp"
+                    android:scaleType="fitXY" />
+            </LinearLayout>
         </RelativeLayout>
-        
     </LinearLayout>
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:background="#000000"
+        android:layout_marginBottom="5dp" />
+<!-- Activities title-->
+    <TextView
+        android:text="Activities"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Title_Activities"
+        android:textSize="36sp"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="20dp" />
 <!-- Collection of all activities content view -->
     <LinearLayout
         android:orientation="vertical"
@@ -106,7 +130,7 @@
         android:minWidth="25px"
         android:minHeight="25px"
         android:id="@+id/Activities_LinearLayout"
-        android:layout_marginTop="60dp">
+        android:layout_marginTop="10dp">
     <!-- activities scrollview -->
         <ScrollView
             android:layout_width="match_parent"
@@ -119,15 +143,31 @@
                 android:columnCount="10" />
         </ScrollView>
     </LinearLayout>
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:background="#000000"
+        android:layout_marginBottom="5dp" />
+<!-- MotivationGoal title-->
+    <TextView
+        android:text="Motivation Goals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Title_MotivationGoals"
+        android:textSize="36sp"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="20dp" />
 <!-- Collection of all motivation goals content view -->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
+        android:layout_weight="3"
         android:minWidth="25px"
         android:minHeight="25px"
-        android:id="@+id/Motivation_Goals_LinearLayout">
+        android:id="@+id/Motivation_Goals_LinearLayout"
+        android:layout_marginTop="10dp">
     <!-- Motivation goals scrollview -->
         <HorizontalScrollView
             android:layout_width="match_parent"

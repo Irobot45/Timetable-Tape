@@ -3,5 +3,5 @@
 	<uses-sdk android:minSdkVersion="17" android:targetSdkVersion="17" />
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<application android:label="Timetable_Tape"></application>
+	<application android:label="Timetable_Tape" android:theme="@android:style/Theme.Holo.Light.DarkActionBar"></application>
 </manifest>

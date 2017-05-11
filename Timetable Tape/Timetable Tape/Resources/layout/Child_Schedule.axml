@@ -1,38 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <LinearLayout
+    android:layout_height="wrap_content"
+    android:background="@drawable/round_border_corner_Layout"
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp">
+  <LinearLayout
+      android:layout_width="600dp"
+      android:layout_height="wrap_content"
+      android:id="@+id/Child_Picture_And_Name_LinearLayout">
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="8"
-        android:id="@+id/Child_Picture_And_Name_LinearLayout">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true">
-            <TextView
-                android:id="@+id/Child_Name_TextView" />
-            <ImageView
-                android:layout_width="190dp"
-                android:layout_height="190dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:id="@+id/Child_Picture_ImageView"
-                android:scaleType="fitXY" />
-        </RelativeLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:id="@+id/Child_Schedule_LinearLayout">
-        <View
-            android:id="@+id/divider"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#808080" />
-    </LinearLayout>
+        android:layout_centerHorizontal="true">
+      <TextView
+          android:layout_width="300dp"
+          android:layout_height="wrap_content"
+          android:id="@+id/Child_Name_TextView"
+          android:textSize="32px"
+          android:layout_centerVertical="true"
+          android:layout_marginTop="20dp"
+          android:layout_marginBottom="20dp" />
+      <ImageView
+          android:layout_width="150dp"
+          android:layout_height="150dp"
+          android:layout_marginLeft="20dp"
+          android:layout_marginRight="20dp"
+          android:layout_marginTop="5dp"
+          android:layout_marginBottom="5dp"
+          android:id="@+id/Child_Picture_ImageView"
+          android:layout_toRightOf="@id/Child_Name_TextView"
+          android:scaleType="fitXY"
+          android:background="@drawable/round_border_corner_ImageView" />
+      <ImageButton
+          android:id="@+id/Edit_Schedule_Button"
+          android:layout_width="100dp"
+          android:layout_height="100dp"
+          android:layout_marginLeft="5dp"
+          android:layout_toRightOf="@id/Child_Picture_ImageView"
+          android:src="@drawable/editimage"
+          android:scaleType="fitXY"
+          android:padding="0dp"
+          />
+    </RelativeLayout>
+  </LinearLayout>
+  <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:id="@+id/Child_Schedule_LinearLayout">
+    <View
+        android:id="@+id/divider"
+        android:layout_width="4.5dp"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:layout_marginRight="20dp" />
+  </LinearLayout>
 </LinearLayout>

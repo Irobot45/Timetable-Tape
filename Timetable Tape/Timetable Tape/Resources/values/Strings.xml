@@ -11,5 +11,5 @@
     <string name="choose_photo">Choose picture</string>
     <string name="cancel_button">Cancel</string>
     <string name="delete_button">Delete</string>
-  
+  <string name="Children_Schedules_Layout_Title">Schedule for the day</string>
 </resources>

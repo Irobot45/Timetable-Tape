@@ -50,19 +50,19 @@ namespace Timetable_Tape
 
             //Loading create timetable fragment
 
-            var trans = FragmentManager.BeginTransaction();
-            trans.Add(Resource.Id.FragmentContainer, new Fragment_Creating_Timetable_Tape(), "Fragment_Creating_Timetable_Tape");
-            trans.Commit();
-
             //var trans = FragmentManager.BeginTransaction();
-            //trans.Add(Resource.Id.FragmentContainer, new Fragment_Children_Schedules(), "Fragment_Children_Schedules");
+            //trans.Add(Resource.Id.FragmentContainer, new Fragment_Creating_Timetable_Tape(), "Fragment_Creating_Timetable_Tape");
             //trans.Commit();
+
+            var trans = FragmentManager.BeginTransaction();
+            trans.Add(Resource.Id.FragmentContainer, new Fragment_Children_Schedules(), "Fragment_Children_Schedules");
+            trans.Commit();
 
 
             // Set our view from the "main" layout resource
             Schedule schedule = new Schedule();
 
-            
+
 
             // Creating Database and connection
             var databaseFileName = "InteractiveTimetableDatabase.db3";
@@ -78,7 +78,7 @@ namespace Timetable_Tape
             // Creating userManager
             userManager = new InteractiveTimetable.BusinessLayer.Managers.UserManager(connection);
 
-            
+
         }
 
         public string GetPathToImage(Activity activity, Android.Net.Uri uri)
@@ -117,7 +117,20 @@ namespace Timetable_Tape
             return availableActivities != null && availableActivities.Count > 0;
         }
 
+        public void changeFragment(Activity act, Fragment fragment, bool addBackToStack)
+        {
+            
 
+            FragmentTransaction transaction = FragmentManager.BeginTransaction();
+            transaction.Replace(Resource.Id.FragmentContainer, fragment, fragment.Class.Name);
+
+            if (addBackToStack) 
+            {
+                transaction.AddToBackStack(null);
+            }
+
+            transaction.Commit();
+        }
     }
 }
 
